@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
+import type { Pizza } from "./pizza.model";
+import { useCarrito } from "./useCarrito";
 
-const pizzas = [
+const pizzas: Pizza[] = [
   {
     id: "1",
     name: "Margarita",
@@ -19,8 +21,6 @@ const pizzas = [
   },
 ];
 
-onMounted;
-
 function addToCart(event: Event) {
   event.stopPropagation();
   const node = (event.composedPath() as HTMLElement[]).find(
@@ -32,8 +32,7 @@ function addToCart(event: Event) {
     const { id } = node.dataset;
     const pizza = pizzas.find((pizza) => pizza.id === id);
     if (pizza) {
-      console.log(pizza);
-      // document.dispatchEvent('add-to-cart', pizza);
+      document.dispatchEvent(createEvent(pizza));
     }
   }
 }
@@ -59,8 +58,8 @@ function createEvent(pizza: any): CustomEvent {
 </template>
 
 <style lang="css" scoped>
-  .pizza {
-    display:grid;
-    grid-template-columns: repeat( auto-fit, minmax(150px, 1fr) );
-  }
+.pizza {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
 </style>
