@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted } from "vue";
 import type { Pizza } from "./pizza.model";
-import { useCarrito } from "./useCarrito";
+import { PubSub } from "../../services/pubSub";
+import { inject } from "vue";
+
+const publisher: PubSub<Pizza> = inject('pizzasSub') as PubSub<Pizza>;
 
 const pizzas: Pizza[] = [
   {
@@ -32,7 +34,8 @@ function addToCart(event: Event) {
     const { id } = node.dataset;
     const pizza = pizzas.find((pizza) => pizza.id === id);
     if (pizza) {
-      document.dispatchEvent(createEvent(pizza));
+      // document.dispatchEvent(createEvent(pizza));
+      publisher.emit("add-to-cart", pizza);
     }
   }
 }
